@@ -58,6 +58,7 @@ type Location struct {
 	Radius    int     `json:"rad"`
 	Trigger   Trigger `json:"t"`
 	TrackerID string  `json:"tid"`
+	GeoHash   string  `json:"ghash"`
 
 	// ToDo: Add support to unmarshal this field into time.Time
 	Timestamp          int64              `json:"tst"`
