@@ -41,11 +41,17 @@ type Battery struct {
 	BatteryStatus BatteryStatus `json:"bs"`
 }
 
+type WiFi struct {
+	SSID  string `json:"SSID"`
+	BSSID string `json:"BSSID"`
+}
+
 type Location struct {
 	Accuracy float64 `json:"acc"`
 	Altitude float64 `json:"alt"`
 
 	Battery
+	WiFi
 
 	Latitude  float64 `json:"lat"`
 	Longitude float64 `json:"lon"`
