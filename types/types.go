@@ -2,6 +2,8 @@
 
 package types
 
+import "time"
+
 // ListResponse is a generic response containing a list of values
 type ListResponse struct {
 	Results []string
@@ -47,7 +49,13 @@ type WiFi struct {
 }
 
 type Location struct {
-	Accuracy float64 `json:"acc"`
+	EpochTime int64     `json:"tst"`
+	Timestamp time.Time `json:"isotst"`
+	Received  time.Time `json:"isorcv"`
+
+	Accuracy         float64 `json:"acc"`
+	VerticalAccuracy int     `json:"vac"`
+
 	Altitude float64 `json:"alt"`
 
 	Battery
@@ -60,9 +68,6 @@ type Location struct {
 	TrackerID string  `json:"tid"`
 	GeoHash   string  `json:"ghash"`
 
-	// ToDo: Add support to unmarshal this field into time.Time
-	Timestamp          int64              `json:"tst"`
-	VerticalAccuracy   int                `json:"vac"`
 	Velocity           int                `json:"vel"`
 	BarometricPressure float64            `json:"p"`
 	ConnectivityStatus ConnectivityStatus `json:"conn"`
