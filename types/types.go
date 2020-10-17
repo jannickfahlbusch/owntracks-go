@@ -54,7 +54,7 @@ type Location struct {
 	Received  time.Time `json:"isorcv"`
 
 	Accuracy         float64 `json:"acc"`
-	VerticalAccuracy int     `json:"vac"`
+	VerticalAccuracy float64 `json:"vac"`
 
 	Altitude float64 `json:"alt"`
 
