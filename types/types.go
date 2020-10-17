@@ -69,6 +69,10 @@ type Location struct {
 	Topic              string             `json:"topic"`
 	InRegions          []string           `json:"inregions"`
 
+	Address     string `json:"addr,omitempty"`
+	Locality    string `json:"locality,omitempty"`
+	CountryCode string `json:"cc,omitempty"`
+
 	DistanceTravelled int `json:"dist"`
 }
 
