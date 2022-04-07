@@ -65,6 +65,20 @@ func (mr *MockClientMockRecorder) Locations(arg0, arg1, arg2, arg3, arg4 interfa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Locations", reflect.TypeOf((*MockClient)(nil).Locations), arg0, arg1, arg2, arg3, arg4)
 }
 
+// Publish mocks base method
+func (m *MockClient) Publish(arg0 context.Context, arg1, arg2 string, arg3 *types.Location) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Publish", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Publish indicates an expected call of Publish
+func (mr *MockClientMockRecorder) Publish(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Publish", reflect.TypeOf((*MockClient)(nil).Publish), arg0, arg1, arg2, arg3)
+}
+
 // Users mocks base method
 func (m *MockClient) Users(arg0 context.Context) ([]string, error) {
 	m.ctrl.T.Helper()

@@ -2,8 +2,10 @@
 package client
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"time"
@@ -18,6 +20,8 @@ const (
 	DefaultTimeFormat = time.RFC3339
 )
 
+const API_PATH = "/api/0/"
+
 type clientInstance struct {
 	client *http.Client
 	apiURL string
@@ -28,7 +32,8 @@ type Client interface {
 	Users(context.Context) ([]string, error)
 	Devices(context.Context, string) ([]string, error)
 	Locations(context.Context, string, string, time.Time, time.Time) (*types.LocationList, error)
-	Version(ctx context.Context) (*types.Version, error)
+	Publish(context.Context, string, string, *types.Location) error
+	Version(context.Context) (*types.Version, error)
 }
 
 // New creates a new Owntracks Client
@@ -78,14 +83,12 @@ func (client *clientInstance) newRequest(ctx context.Context, path string, param
 
 	endpointURL.Path += path
 
-	request, err := http.NewRequestWithContext(ctx, http.MethodGet, endpointURL.String(), nil)
-
-	return request, err
+	return http.NewRequestWithContext(ctx, http.MethodGet, endpointURL.String(), nil)
 }
 
 // Users returns a list of Users known to the Recorder
 func (client *clientInstance) Users(ctx context.Context) ([]string, error) {
-	request, err := client.newRequest(ctx, "/list", nil)
+	request, err := client.newRequest(ctx, API_PATH+"/list", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +105,7 @@ func (client *clientInstance) Users(ctx context.Context) ([]string, error) {
 
 // Devices returns the devices of the user 'user'
 func (client *clientInstance) Devices(ctx context.Context, user string) ([]string, error) {
-	request, err := client.newRequest(ctx, "/list", map[string]string{"user": user})
+	request, err := client.newRequest(ctx, API_PATH+"/list", map[string]string{"user": user})
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +145,7 @@ func (client *clientInstance) Locations(ctx context.Context, user, device string
 
 // Version returns the version of the recorder
 func (client *clientInstance) Version(ctx context.Context) (*types.Version, error) {
-	request, err := client.newRequest(ctx, "/version", nil)
+	request, err := client.newRequest(ctx, API_PATH+"/version", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -155,4 +158,38 @@ func (client *clientInstance) Version(ctx context.Context) (*types.Version, erro
 	}
 
 	return versionResponse, nil
+}
+
+func (client *clientInstance) Publish(ctx context.Context, user, device string, location *types.Location) error {
+	endpointURL, err := url.Parse(client.apiURL + "/pub")
+	if err != nil {
+		return err
+	}
+
+	jsonContent, err := json.Marshal(location)
+	if err != nil {
+		return err
+	}
+
+	request, err := http.NewRequestWithContext(ctx, http.MethodPost, endpointURL.String(), bytes.NewReader(jsonContent))
+	if err != nil {
+		return err
+	}
+
+	request.Header.Set("X-Limit-U", user)
+	request.Header.Set("X-Limit-D", device)
+	request.Header.Set("Content-Type", "application/json")
+
+	response, err := client.client.Do(request)
+	if err != nil {
+		return err
+	}
+
+	defer response.Body.Close()
+	_, err = ioutil.ReadAll(response.Body)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

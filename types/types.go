@@ -30,6 +30,8 @@ const (
 	TriggerFrequentLocationsMonitoring Trigger = "v"
 )
 
+const LocationType = "location"
+
 type ConnectivityStatus string
 
 const (
@@ -39,51 +41,53 @@ const (
 )
 
 type Battery struct {
-	BatteryLevel  int           `json:"batt"`
-	BatteryStatus BatteryStatus `json:"bs"`
+	BatteryLevel  int           `json:"batt,omitempty"`
+	BatteryStatus BatteryStatus `json:"bs,omitempty"`
 }
 
 type WiFi struct {
-	SSID  string `json:"SSID"`
-	BSSID string `json:"BSSID"`
+	SSID  string `json:"SSID,omitempty"`
+	BSSID string `json:"BSSID,omitempty"`
 }
 
 type Location struct {
-	EpochTime int64     `json:"tst"`
-	Timestamp time.Time `json:"isotst"`
-	Received  time.Time `json:"isorcv"`
+	Type string `json:"_type,omitempty"`
 
-	Accuracy         float64 `json:"acc"`
-	VerticalAccuracy float64 `json:"vac"`
+	EpochTime int64      `json:"tst"`
+	Timestamp *time.Time `json:"isotst,omitempty"`
+	Received  *time.Time `json:"isorcv,omitempty"`
 
-	Altitude float64 `json:"alt"`
+	Accuracy         float64 `json:"acc,omitempty"`
+	VerticalAccuracy float64 `json:"vac,omitempty"`
+
+	Altitude float64 `json:"alt,omitempty"`
 
 	Battery
 	WiFi
 
 	Latitude  float64 `json:"lat"`
 	Longitude float64 `json:"lon"`
-	Radius    int     `json:"rad"`
-	Trigger   Trigger `json:"t"`
-	TrackerID string  `json:"tid"`
-	GeoHash   string  `json:"ghash"`
+	Radius    float64 `json:"rad,omitempty"`
+	Trigger   Trigger `json:"t,omitempty"`
+	TrackerID string  `json:"tid,omitempty"`
+	GeoHash   string  `json:"ghash,omitempty"`
 
-	Velocity           int                `json:"vel"`
-	BarometricPressure float64            `json:"p"`
-	ConnectivityStatus ConnectivityStatus `json:"conn"`
-	Topic              string             `json:"topic"`
-	InRegions          []string           `json:"inregions"`
+	Velocity           int                `json:"vel,omitempty"`
+	BarometricPressure float64            `json:"p,omitempty"`
+	ConnectivityStatus ConnectivityStatus `json:"conn,omitempty"`
+	Topic              string             `json:"topic,omitempty"`
+	InRegions          []string           `json:"inregions,omitempty"`
 
-	Address     string `json:"addr,omitempty"`
-	Locality    string `json:"locality,omitempty"`
+	Address     string `json:"addr,omitempty,omitempty"`
+	Locality    string `json:"locality,omitempt,omitempty"`
 	CountryCode string `json:"cc,omitempty"`
 
-	DistanceTravelled int `json:"dist"`
+	DistanceTravelled int `json:"dist,omitempty"`
 }
 
 type LocationList struct {
 	Count  int
-	Data   []Location
+	Data   []*Location
 	Status int
 }
 
