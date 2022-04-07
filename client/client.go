@@ -34,6 +34,9 @@ type Client interface {
 	Locations(context.Context, string, string, time.Time, time.Time) (*types.LocationList, error)
 	Publish(context.Context, string, string, *types.Location) error
 	Version(context.Context) (*types.Version, error)
+
+	// Exists is not present on the recorder API. This method will use Locations() internally
+	Exists(context.Context, string, string, *types.Location) (bool, error)
 }
 
 // New creates a new Owntracks Client
@@ -128,7 +131,7 @@ func (client *clientInstance) Locations(ctx context.Context, user, device string
 		"from":   from.Format(DefaultTimeFormat),
 		"to":     to.Format(DefaultTimeFormat),
 	}
-	request, err := client.newRequest(ctx, "/locations", parameters)
+	request, err := client.newRequest(ctx, API_PATH+"/locations", parameters)
 	if err != nil {
 		return nil, err
 	}
@@ -192,4 +195,28 @@ func (client *clientInstance) Publish(ctx context.Context, user, device string, 
 	}
 
 	return nil
+}
+
+func (client *clientInstance) Exists(ctx context.Context, user, device string, location *types.Location) (bool, error) {
+
+	// From and To are exclusive and in UTC, so we need to substract/add a second to get the location in question in between
+	fromExclusive := location.Timestamp.Add(-time.Second).UTC()
+	toExclusive := location.Timestamp.Add(time.Second).UTC()
+
+	locations, err := client.Locations(ctx, user, device, fromExclusive, toExclusive)
+	if err != nil {
+		return false, err
+	}
+
+	if locations.Count <= 0 {
+		return false, nil
+	}
+
+	for _, availableLocation := range locations.Data {
+		if availableLocation.IsSamePlaceAndTime(location) {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
