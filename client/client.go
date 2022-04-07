@@ -20,7 +20,7 @@ const (
 	DefaultTimeFormat = time.RFC3339
 )
 
-const API_PATH = "/api/0/"
+const API_PATH = "/api/0"
 
 type clientInstance struct {
 	client *http.Client

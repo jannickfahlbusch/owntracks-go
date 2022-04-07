@@ -8,7 +8,7 @@ import (
 )
 
 func Test_Users(t *testing.T) {
-	expectedURI := "/list"
+	expectedURI := API_PATH + "/list"
 	testServer := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.RequestURI != expectedURI {
 			t.Fatalf("Expected URI to be ''%s' but got '%s'", expectedURI, request.RequestURI)
@@ -31,7 +31,7 @@ func Test_Users(t *testing.T) {
 }
 
 func Test_Devices(t *testing.T) {
-	expectedURI := "/list?user=test"
+	expectedURI := API_PATH + "/list?user=test"
 	testServer := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.RequestURI != expectedURI {
 			t.Fatalf("Expected URI to be ''%s' but got '%s'", expectedURI, request.RequestURI)
@@ -53,12 +53,8 @@ func Test_Devices(t *testing.T) {
 	}
 }
 
-func Test_Locations(t *testing.T) {
-
-}
-
 func Test_Version(t *testing.T) {
-	expectedURI := "/version"
+	expectedURI := API_PATH + "/version"
 	testServer := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.RequestURI != expectedURI {
 			t.Fatalf("Expected URI to be ''%s' but got '%s'", expectedURI, request.RequestURI)
