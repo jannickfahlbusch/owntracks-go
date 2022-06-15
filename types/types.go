@@ -65,14 +65,15 @@ type Location struct {
 	Battery
 	WiFi
 
-	Latitude  float64 `json:"lat"`
-	Longitude float64 `json:"lon"`
-	Radius    float64 `json:"rad,omitempty"`
-	Trigger   Trigger `json:"t,omitempty"`
-	TrackerID string  `json:"tid,omitempty"`
-	GeoHash   string  `json:"ghash,omitempty"`
+	Latitude         float64 `json:"lat"`
+	Longitude        float64 `json:"lon"`
+	Radius           float64 `json:"rad,omitempty"`
+	Trigger          Trigger `json:"t,omitempty"`
+	TrackerID        string  `json:"tid,omitempty"`
+	GeoHash          string  `json:"ghash,omitempty"`
+	CourseOverGround float64 `json:"cog,omitempty"`
 
-	Velocity           int                `json:"vel,omitempty"`
+	Velocity           float64            `json:"vel,omitempty"`
 	BarometricPressure float64            `json:"p,omitempty"`
 	ConnectivityStatus ConnectivityStatus `json:"conn,omitempty"`
 	Topic              string             `json:"topic,omitempty"`
