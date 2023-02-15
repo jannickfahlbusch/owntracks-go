@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/jannickfahlbusch/owntracks-go/types"
+	"pkg.jf-projects.de/owntracks/types"
 )
 
 var _ Client = &clientInstance{}
